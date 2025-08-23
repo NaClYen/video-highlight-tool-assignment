@@ -1,1 +1,73 @@
 @import 'tailwindcss';
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  /* Prevent zoom on input focus */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  /* Improve touch targets */
+  button,
+  [role='button'] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Optimize scrolling */
+  .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent text selection during touch interactions */
+  .select-none {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+}
+
+/* General mobile improvements */
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Touch-friendly hover states */
+@media (hover: none) {
+  .hover\:bg-neutral-600:hover {
+    background-color: transparent;
+  }
+
+  .hover\:bg-gray-700:hover {
+    background-color: transparent;
+  }
+
+  .hover\:bg-indigo-600:hover {
+    background-color: transparent;
+  }
+
+  .hover\:bg-green-700:hover {
+    background-color: transparent;
+  }
+
+  .hover\:shadow-md:hover {
+    box-shadow: none;
+  }
+
+  .hover\:-translate-y-0\.5:hover {
+    transform: none;
+  }
+
+  .hover\:border-white:hover {
+    border-color: transparent;
+  }
+}
