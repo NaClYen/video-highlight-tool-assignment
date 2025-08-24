@@ -9,7 +9,7 @@ import {
  * 轉換設置組件屬性
  */
 interface TransitionSettingsProps {
-  /** 當前配置 */
+  /** 目前配置 */
   config: TransitionConfig
   /** 配置變更回調 */
   onConfigChange: (config: TransitionConfig) => void
@@ -137,7 +137,7 @@ export const TransitionSettings: React.FC<TransitionSettingsProps> = ({
                 }
                 className="mr-2"
               />
-              音頻淡入淡出
+              聲音淡入淡出
             </label>
           </div>
 
@@ -179,7 +179,7 @@ export const TransitionSettings: React.FC<TransitionSettingsProps> = ({
 
           <div>
             <label className="block text-sm mb-1">
-              音頻淡入淡出時間: {localConfig.audioFadeDuration}ms
+              聲音淡入淡出時間: {localConfig.audioFadeDuration}ms
             </label>
             <input
               type="range"
@@ -251,7 +251,7 @@ export const TransitionSettings: React.FC<TransitionSettingsProps> = ({
               • <strong>無障礙</strong>：為聽覺敏感用戶優化
             </li>
             <li>• 較長的轉換時間可以減少落差感，但可能影響響應性</li>
-            <li>• 音頻淡入淡出可以平滑音頻轉換</li>
+            <li>• 聲音淡入淡出可以平滑聲音轉換</li>
           </ul>
         </div>
       </div>

@@ -16,7 +16,7 @@ export type TransitionState =
 export interface TransitionConfig {
   /** 轉換持續時間（毫秒） */
   duration: number
-  /** 音頻淡入淡出時間（毫秒） */
+  /** 聲音淡入淡出時間（毫秒） */
   audioFadeDuration: number
   /** 預加載提前時間（秒） */
   preloadAdvance: number
@@ -61,7 +61,7 @@ export const useSmoothTransition = (
   })
 
   /**
-   * 初始化音頻上下文
+   * 初始化聲音上下文
    */
   const initAudioContext = useCallback(() => {
     if (!videoRef.current || transitionRef.current.audioContext) return
@@ -71,7 +71,7 @@ export const useSmoothTransition = (
         (window as any).webkitAudioContext)()
       const gainNode = audioContext.createGain()
 
-      // 創建音頻源
+      // 創建聲音源
       const source = audioContext.createMediaElementSource(videoRef.current)
       source.connect(gainNode)
       gainNode.connect(audioContext.destination)
@@ -84,14 +84,14 @@ export const useSmoothTransition = (
   }, [videoRef])
 
   /**
-   * 音頻淡出效果
+   * 聲音淡出效果
    */
   const fadeOutAudio = useCallback(
     async (duration: number) => {
       const { audioContext, gainNode } = transitionRef.current
 
       if (audioContext && gainNode) {
-        // 使用 Web Audio API 進行精確的音頻控制
+        // 使用 Web Audio API 進行精確的聲音控制
         const startTime = audioContext.currentTime
         gainNode.gain.setValueAtTime(1, startTime)
         gainNode.gain.linearRampToValueAtTime(0, startTime + duration / 1000)
@@ -117,7 +117,7 @@ export const useSmoothTransition = (
   )
 
   /**
-   * 音頻淡入效果
+   * 聲音淡入效果
    */
   const fadeInAudio = useCallback(
     async (duration: number) => {
@@ -156,7 +156,7 @@ export const useSmoothTransition = (
 
       setTransitionState('preparing')
 
-      // 初始化音頻上下文
+      // 初始化聲音上下文
       initAudioContext()
 
       // 開始淡出

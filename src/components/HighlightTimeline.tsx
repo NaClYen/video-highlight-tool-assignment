@@ -241,7 +241,7 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
             </div>
           ))}
 
-          {/* 當前播放位置指示器 */}
+          {/* 目前播放位置指示器 */}
           <div
             className="absolute top-0 w-0.5 h-[40px] md:h-[60px] bg-red-500 pointer-events-none z-10"
             style={{ left: `${getCurrentTimePosition()}%` }}

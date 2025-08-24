@@ -7,7 +7,7 @@ export interface TransitionConfig {
   enabled: boolean
   /** 轉換持續時間（毫秒） */
   duration: number
-  /** 音頻淡入淡出時間（毫秒） */
+  /** 聲音淡入淡出時間（毫秒） */
   audioFadeDuration: number
   /** 預加載提前時間（秒） */
   preloadAdvance: number
@@ -15,7 +15,7 @@ export interface TransitionConfig {
   transitionTolerance: number
   /** 是否啟用視覺過渡效果 */
   visualEffects: boolean
-  /** 是否啟用音頻淡入淡出 */
+  /** 是否啟用聲音淡入淡出 */
   audioFade: boolean
   /** 是否啟用預加載 */
   preload: boolean
@@ -59,7 +59,7 @@ export const accessibilityTransitionConfig: TransitionConfig = {
   preloadAdvance: 3,
   transitionTolerance: 0.08,
   visualEffects: true,
-  audioFade: false, // 禁用音頻淡入淡出以避免聽覺不適
+  audioFade: false, // 禁用聲音淡入淡出以避免聽覺不適
   preload: true,
 }
 

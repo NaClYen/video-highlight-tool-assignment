@@ -9,7 +9,7 @@ interface TransitionIndicatorProps {
   transitionState: TransitionState
   /** 轉換進度 (0-1) */
   progress: number
-  /** 當前片段信息 */
+  /** 目前片段信息 */
   currentSegment?: {
     start: number
     end: number
@@ -86,7 +86,7 @@ export const TransitionIndicator: React.FC<TransitionIndicatorProps> = ({
       <div className="space-y-2 text-xs">
         {currentSegment && (
           <div className="flex justify-between">
-            <span className="text-gray-300">當前片段:</span>
+            <span className="text-gray-300">目前片段:</span>
             <span>
               {formatTime(currentSegment.start)} -{' '}
               {formatTime(currentSegment.end)}
