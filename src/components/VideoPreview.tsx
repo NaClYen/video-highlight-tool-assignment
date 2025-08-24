@@ -131,6 +131,7 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
           className="w-full h-full max-h-[400px] rounded-lg cursor-pointer object-contain lg:rounded-b-none lg:mx-0 lg:px-0"
           onClick={isPlaying ? pause : play}
           data-testid="video-element"
+          playsInline
         />
 
         {currentSubtitle && (
