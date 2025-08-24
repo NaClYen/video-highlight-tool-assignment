@@ -76,6 +76,11 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
 
   // Auto-scroll to keep the current time indicator in view
   useEffect(() => {
+    // Only auto-scroll when video is playing
+    if (!state.isPlaying) {
+      return
+    }
+
     if (timelineRef.current) {
       const indicatorPositionPx = currentTime * PIXELS_PER_SECOND
       const timelineWidth = timelineRef.current.clientWidth
@@ -96,7 +101,7 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
         timelineRef.current.scrollLeft = desiredScrollLeft
       }
     }
-  }, [currentTime, duration])
+  }, [currentTime, duration, state.isPlaying])
 
   /**
    * Get segments to display - show ALL sentences, not just selected ones
