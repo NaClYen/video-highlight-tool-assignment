@@ -54,12 +54,12 @@ export const TranscriptEditor: React.FC<TranscriptEditorProps> = ({
   return (
     <div
       data-testid="transcript-editor"
-      className="h-full flex flex-col min-h-0"
+      className="flex-1 flex flex-col min-h-0"
     >
       <h3 className="mt-0 text-white border-b border-neutral-700 pb-2 text-sm md:text-base font-medium flex-shrink-0s">
         編輯區域
       </h3>
-      <div className="flex-1 overflow-y-auto min-h-0 pb-4">
+      <div className="flex-1 min-h-0 pb-4 overflow-y-auto">
         {sections.map((section) => (
           <div key={section.id} className="mb-4 md:mb-8">
             <h4 className="text-sky-400 mb-2 md:mb-4 text-sm md:text-lg font-medium">
