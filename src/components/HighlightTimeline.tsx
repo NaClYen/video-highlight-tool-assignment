@@ -205,7 +205,11 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
       <div className="relative">
         <div
           ref={timelineRef}
-          className="relative h-[60px] rounded-lg lg:rounded-t-none overflow-x-auto bg-gradient-to-r from-neutral-700 via-neutral-600 to-neutral-700 cursor-pointer select-none"
+          className="relative h-[60px] md:h-[70px] lg:h-[100px] rounded-lg lg:rounded-t-none overflow-x-auto bg-gradient-to-r from-neutral-700 via-neutral-600 to-neutral-700 cursor-pointer select-none timeline-container"
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#6b7280 transparent',
+          }}
           onClick={handleTimelineClick}
           onMouseDown={handleTimelineDrag}
           onTouchStart={handleTouchStart}
@@ -220,7 +224,7 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
               <div
                 key={segment.id}
                 className={clsx(
-                  'absolute top-[3px] md:top-[5px] h-[34px] md:h-[50px] rounded cursor-pointer flex items-center justify-center transition-all border-2 border-transparent hover:-translate-y-0.5 hover:border-white shadow hover:shadow-md text-white text-xs',
+                  'absolute top-[3px] md:top-[5px] lg:top-[8px] h-[34px] md:h-[50px] lg:h-[60px] rounded cursor-pointer flex items-center justify-center transition-all border-2 border-transparent hover:-translate-y-0.5 hover:border-white shadow hover:shadow-md text-white text-xs',
                   {
                     'bg-green-600/70': segment.isSelected,
                     'bg-neutral-600/50 border-neutral-500': !segment.isSelected,
@@ -252,7 +256,7 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
 
             {/* 目前播放位置指示器 */}
             <div
-              className="absolute top-0 w-0.5 h-[40px] md:h-[60px] bg-red-500 pointer-events-none z-10"
+              className="absolute top-0 w-0.5 h-[40px] md:h-[60px] lg:h-[70px] bg-red-500 pointer-events-none z-10"
               style={{ left: `${currentTime * PIXELS_PER_SECOND}px` }}
             >
               <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 md:w-2.5 h-2 md:h-2.5 bg-red-500 rounded-full" />
@@ -265,10 +269,9 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
               return (
                 <div
                   key={i}
-                  className="absolute -translate-x-1/2 whitespace-nowrap text-neutral-400 text-xs"
+                  className="absolute -translate-x-1/2 whitespace-nowrap text-neutral-400 text-xs md:text-sm bottom-0"
                   style={{
                     left: `${time * PIXELS_PER_SECOND}px`,
-                    top: '40px',
                   }}
                 >
                   {formatTime(time)}

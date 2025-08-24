@@ -46,11 +46,23 @@ body {
 
 /* Root element configuration */
 #root {
-  height: 100vh;
+  height: 100dvh; /* 使用動態視窗高度，自動適應瀏覽器 UI 變化 */
   width: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden; /* 防止整個頁面滾動，但允許內部元素滾動 */
+}
+
+/* Hide scrollbars on desktop for timeline */
+@media (min-width: 1024px) {
+  .timeline-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .timeline-container {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
 
 /* Touch-friendly hover states */
