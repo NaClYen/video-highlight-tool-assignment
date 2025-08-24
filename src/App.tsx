@@ -85,6 +85,13 @@ function App() {
             {isProcessing && (
               <p className="mt-2 text-neutral-300">正在處理影片，請稍候...</p>
             )}
+            <a
+              href="/demo.mp4"
+              download="demo.mp4"
+              className="mt-4 text-blue-400 hover:text-blue-300 underline"
+            >
+              下載範例影片 (demo.mp4)
+            </a>
           </div>
         ) : (
           <AppContent
