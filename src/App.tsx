@@ -177,7 +177,7 @@ function AppContent({
 
   return (
     <>
-      <div className="flex flex-1 min-h-0 flex-col lg:flex-row h-[calc(100vh-80px)] md:h-[calc(100vh-80px)] lg:h-[calc(100vh-80px)]">
+      <div className="flex flex-1 min-h-0 flex-col lg:flex-row h-[calc(100dvh-80px)] md:h-[calc(100dvh-80px)] lg:h-[calc(100dvh-80px)]">
         {/* 預覽區 - 手機版固定在頂部，桌面版在右側 */}
         <div className="lg:flex-1 p-2 md:p-4 bg-neutral-700 lg:h-auto order-1 lg:order-2 min-h-0 flex-shrink-0 sticky top-0 left-0 right-0 md:relative">
           <VideoPreview
