@@ -1,19 +1,13 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { useVideoPlayerContext } from '../contexts/useVideoPlayerContext'
 import { useVideoPlayer } from '../hooks/useVideoPlayer'
-import { TransitionSettings } from './TransitionSettings'
 import { type TranscriptSentence } from '../types'
-import {
-  type TransitionConfig,
-  defaultTransitionConfig,
-} from '../config/transitionConfig'
 import performanceMonitor from '../utils/performanceMonitor'
 import {
   BackwardIcon,
   ForwardIcon,
   PauseIcon,
   PlayIcon,
-  CogIcon,
 } from '@heroicons/react/24/outline'
 
 /**
@@ -44,11 +38,6 @@ export const VideoControls: React.FC<VideoControlsProps> = ({
     navigateToNextSegment,
     getNavigationState,
   } = useVideoPlayer()
-
-  const [showSettings, setShowSettings] = useState(false)
-  const [transitionConfig, setTransitionConfig] = useState<TransitionConfig>(
-    defaultTransitionConfig,
-  )
 
   const navigationState = getNavigationState(selectedSentences)
 
@@ -117,15 +106,6 @@ export const VideoControls: React.FC<VideoControlsProps> = ({
 
         <button
           type="button"
-          className="bg-gray-600 text-white px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm transition-colors hover:bg-gray-700 cursor-pointer flex-1 md:flex-none flex items-center justify-center"
-          onClick={() => setShowSettings(true)}
-          title="轉換設置"
-        >
-          <CogIcon className="w-4 h-4" />
-        </button>
-
-        <button
-          type="button"
           className="bg-gray-600 text-white px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm transition-colors hover:bg-gray-700 disabled:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer flex-1 md:flex-none flex items-center justify-center"
           onClick={handleNextSegment}
           disabled={selectedCount === 0 || !navigationState.canNavigateNext}
@@ -135,14 +115,6 @@ export const VideoControls: React.FC<VideoControlsProps> = ({
           <ForwardIcon className="w-4 h-4" />
         </button>
       </div>
-
-      {/* 轉換設置對話框 */}
-      <TransitionSettings
-        config={transitionConfig}
-        onConfigChange={setTransitionConfig}
-        visible={showSettings}
-        onClose={() => setShowSettings(false)}
-      />
     </div>
   )
 }

@@ -2,7 +2,6 @@ import { useMemo, useState, useCallback, useEffect } from 'react'
 import { VideoUpload } from './components/VideoUpload'
 import { TranscriptEditor } from './components/TranscriptEditor'
 import { VideoPreview } from './components/VideoPreview'
-import { TransitionIndicator } from './components/TransitionIndicator'
 import type { VideoData, MockApiResponse } from './types'
 import { mockProcessVideo } from './utils/mockApi'
 import { VideoPlayerProvider } from './contexts/VideoPlayerProvider'
@@ -116,8 +115,7 @@ function AppContent({
   onSentenceToggle: (sentenceId: string) => void
 }) {
   const { state, dispatch } = useVideoPlayerContext()
-  const { seekToTimestamp, transitionState, transitionProgress } =
-    useVideoPlayer()
+  const { seekToTimestamp } = useVideoPlayer()
   const {
     currentTime,
     isPlayingHighlights,
@@ -179,24 +177,6 @@ function AppContent({
 
   return (
     <>
-      {/* 轉換指示器 */}
-      <TransitionIndicator
-        transitionState={transitionState}
-        progress={transitionProgress}
-        currentSegment={
-          isPlayingHighlights && currentSegmentIndex >= 0
-            ? highlightRanges[currentSegmentIndex]
-            : undefined
-        }
-        nextSegment={
-          isPlayingHighlights &&
-          currentSegmentIndex + 1 < highlightRanges.length
-            ? highlightRanges[currentSegmentIndex + 1]
-            : undefined
-        }
-        visible={transitionState !== 'idle'}
-      />
-
       <div className="flex flex-1 min-h-0 flex-col lg:flex-row h-[calc(100vh-80px)] md:h-[calc(100vh-80px)]">
         {/* 預覽區 - 手機版固定在頂部，桌面版在右側 */}
         <div className="lg:flex-1 p-2 md:p-4 bg-neutral-700 lg:h-auto order-1 lg:order-2 min-h-0 flex-shrink-0 sticky top-0 left-0 right-0 md:relative">

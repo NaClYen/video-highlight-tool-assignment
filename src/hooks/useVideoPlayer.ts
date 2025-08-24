@@ -2,7 +2,7 @@ import { useRef, useCallback, useEffect } from 'react'
 import type { TranscriptSentence } from '../types'
 import { useVideoPlayerContext } from '../contexts/useVideoPlayerContext'
 import { useVideoEffects } from './useVideoEffects'
-import { useSmoothTransition } from './useSmoothTransition'
+import { getTransitionConfig } from '../config/transitionConfig'
 
 /**
  * Main hook for video player functionality
@@ -27,19 +27,8 @@ export const useVideoPlayer = () => {
   // Apply centralized video effects - this handles all DOM synchronization
   useVideoEffects(videoRef)
 
-  // Initialize smooth transition system
-  const {
-    transitionState,
-    transitionProgress,
-    executeSmoothTransition,
-    preloadNextSegment,
-    shouldTransition,
-  } = useSmoothTransition(videoRef, {
-    duration: 300,
-    audioFadeDuration: 150,
-    preloadAdvance: 2,
-    transitionTolerance: 0.05,
-  })
+  // Get transition configuration
+  const transitionConfig = getTransitionConfig()
 
   /**
    * Handle highlight playback logic when time updates
@@ -62,11 +51,10 @@ export const useVideoPlayer = () => {
       return
     }
 
-    // Use smart transition timing to reduce jarring effects
-    const shouldTransitionNow = shouldTransition(
-      currentTime,
-      currentSegment.end,
-    )
+    // Use simple timing logic for segment transitions
+    const timeToEnd = currentSegment.end - currentTime
+    const shouldTransitionNow =
+      timeToEnd <= transitionConfig.transitionTolerance
 
     if (shouldTransitionNow) {
       // Prevent rapid segment transitions - minimum 0.5s between transitions
@@ -81,30 +69,16 @@ export const useVideoPlayer = () => {
 
       if (nextIndex < highlightRanges.length) {
         const nextSegment = highlightRanges[nextIndex]
-
-        // Preload next segment for smoother transition
-        preloadNextSegment(nextSegment.start)
-
-        // Execute smooth transition instead of hard jump
-        executeSmoothTransition(currentTime, nextSegment.start).then(() => {
-          dispatch({
-            type: 'TRANSITION_TO_NEXT_SEGMENT',
-            payload: { nextIndex, nextStartTime: nextSegment.start },
-          })
+        dispatch({
+          type: 'TRANSITION_TO_NEXT_SEGMENT',
+          payload: { nextIndex, nextStartTime: nextSegment.start },
         })
       } else {
         // End of highlight sequence - loop back to first segment
         const firstSegment = highlightRanges[0]
-
-        // Preload first segment for loop transition
-        preloadNextSegment(firstSegment.start)
-
-        // Execute smooth transition instead of hard jump
-        executeSmoothTransition(currentTime, firstSegment.start).then(() => {
-          dispatch({
-            type: 'TRANSITION_TO_NEXT_SEGMENT',
-            payload: { nextIndex: 0, nextStartTime: firstSegment.start },
-          })
+        dispatch({
+          type: 'TRANSITION_TO_NEXT_SEGMENT',
+          payload: { nextIndex: 0, nextStartTime: firstSegment.start },
         })
       }
     }
@@ -115,6 +89,7 @@ export const useVideoPlayer = () => {
     highlightRanges,
     state.pendingSeek,
     dispatch,
+    transitionConfig.transitionTolerance,
   ])
 
   /**
@@ -275,10 +250,6 @@ export const useVideoPlayer = () => {
     navigateToPreviousSegment,
     navigateToNextSegment,
     getNavigationState,
-
-    // Smooth transition state
-    transitionState,
-    transitionProgress,
 
     // State (these are now directly from context, but returned for convenience)
     isPlayingHighlights,
