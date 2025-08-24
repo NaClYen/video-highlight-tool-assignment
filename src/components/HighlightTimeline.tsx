@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useRef, useState, useEffect } from 'react'
+import React, { useMemo, useCallback, useRef, useEffect } from 'react'
 import clsx from 'clsx'
 import { useVideoPlayerContext } from '../contexts/useVideoPlayerContext'
 
@@ -40,39 +40,6 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
       .toString()
       .padStart(2, '0')}`
   }
-
-  // Debounced timeline position to prevent jittering during highlight playback
-  const [debouncedPosition, setDebouncedPosition] = useState(0)
-  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-
-  // Debounce timeline position updates to reduce jittering
-  useEffect(() => {
-    const newPosition = currentTime * PIXELS_PER_SECOND
-
-    // Clear existing timeout
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current)
-    }
-
-    debounceTimeoutRef.current = setTimeout(() => {
-      setDebouncedPosition(newPosition)
-    }, 100)
-
-    return () => {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current)
-      }
-    }
-  }, [currentTime])
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current)
-      }
-    }
-  }, [])
 
   // Auto-scroll to keep the current time indicator in view
   useEffect(() => {
