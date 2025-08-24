@@ -91,7 +91,7 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
   return (
     <div
       data-testid="video-preview"
-      className="lg:h-full flex flex-col min-h-0"
+      className="lg:h-full flex flex-col min-h-0 z-10"
     >
       <h3 className="text-white border-b border-neutral-700 pb-2 text-sm md:text-base font-medium flex-shrink-0">
         預覽區域
@@ -128,7 +128,7 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
         <video
           ref={videoRef}
           src={videoUrl}
-          className="w-full h-full max-h-1/2 md:max-h-[400px] rounded-lg cursor-pointer object-contain lg:rounded-b-none lg:mx-0 lg:px-0"
+          className="w-full h-full max-h-1/3 md:max-h-[400px] rounded-lg cursor-pointer object-contain lg:rounded-b-none lg:mx-0 lg:px-0"
           onClick={isPlaying ? pause : play}
           data-testid="video-element"
           playsInline
@@ -136,7 +136,7 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
 
         {currentSubtitle && (
           <div
-            className="absolute bottom-5 left-1/2 -translate-x-1/2 bg-black/90 text-white px-2 md:px-4 py-1 md:py-2 rounded-lg text-xs md:text-sm lg:text-base max-w-[90%] md:max-w-[85%] text-center pointer-events-none shadow-lg border border-white/20"
+            className="absolute bottom-5 left-1/2 -translate-x-1/2 bg-black/90 text-white px-2 md:px-4 py-1 md:py-2 rounded-lg text-xs md:text-sm lg:text-base max-w-[90%] md:max-w-[85%] text-center pointer-events-none shadow-lg border border-white/20 z-20"
             data-testid="subtitle-overlay"
             style={{
               textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)',
