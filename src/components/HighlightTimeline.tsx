@@ -12,6 +12,8 @@ interface HighlightTimelineProps {
   allSentences?: TranscriptSentence[]
 }
 
+const PIXELS_PER_SECOND = 20 // 20 pixels per second of video
+
 /**
  * HighlightTimeline component displays a visual timeline of highlight segments
  * Shows all sentences (selected and unselected) with clear visual distinction
@@ -45,7 +47,7 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
 
   // Debounce timeline position updates to reduce jittering
   useEffect(() => {
-    const newPosition = (currentTime / duration) * 100
+    const newPosition = currentTime * PIXELS_PER_SECOND
 
     // Clear existing timeout
     if (debounceTimeoutRef.current) {
@@ -61,7 +63,7 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
         clearTimeout(debounceTimeoutRef.current)
       }
     }
-  }, [currentTime, duration])
+  }, [currentTime])
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -71,6 +73,30 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
       }
     }
   }, [])
+
+  // Auto-scroll to keep the current time indicator in view
+  useEffect(() => {
+    if (timelineRef.current) {
+      const indicatorPositionPx = currentTime * PIXELS_PER_SECOND
+      const timelineWidth = timelineRef.current.clientWidth
+      const timelineScrollWidth = timelineRef.current.scrollWidth
+
+      // Calculate desired scroll position to center the indicator
+      let desiredScrollLeft = indicatorPositionPx - timelineWidth / 2
+
+      // Clamp scroll position to valid bounds
+      desiredScrollLeft = Math.max(0, desiredScrollLeft) // Cannot scroll before the beginning
+      desiredScrollLeft = Math.min(
+        desiredScrollLeft,
+        timelineScrollWidth - timelineWidth,
+      ) // Cannot scroll past the end
+
+      // Apply scroll if it's different from current scrollLeft
+      if (timelineRef.current.scrollLeft !== desiredScrollLeft) {
+        timelineRef.current.scrollLeft = desiredScrollLeft
+      }
+    }
+  }, [currentTime, duration])
 
   /**
    * Get segments to display - show ALL sentences, not just selected ones
@@ -96,17 +122,12 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
     isSelected: boolean
     isInHighlightSequence: boolean
   }) => {
-    const left = (segment.start / duration) * 100
-    const width = ((segment.end - segment.start) / duration) * 100
+    const left = segment.start * PIXELS_PER_SECOND
+    const width = (segment.end - segment.start) * PIXELS_PER_SECOND
     return {
-      left: `${left}%`,
-      width: `${width}%`,
+      left: `${left}px`,
+      width: `${width}px`,
     }
-  }
-
-  const getCurrentTimePosition = () => {
-    // Use debounced position to prevent jittering
-    return debouncedPosition
   }
 
   const timelineRef = useRef<HTMLDivElement>(null)
@@ -117,8 +138,10 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
 
       const rect = timelineRef.current.getBoundingClientRect()
       const clickX = event.clientX - rect.left
-      const percentage = clickX / rect.width
-      const seekTime = percentage * duration
+      const scrollLeft = timelineRef.current.scrollLeft
+      const clickXInContent = clickX + scrollLeft
+
+      const seekTime = clickXInContent / PIXELS_PER_SECOND
 
       // Clamp to valid range
       const clampedTime = Math.max(0, Math.min(seekTime, duration))
@@ -138,8 +161,10 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
         if (!rect) return
 
         const x = e.clientX - rect.left
-        const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
-        const time = (percentage / 100) * duration
+        const scrollLeft = timelineRef.current?.scrollLeft || 0
+        const xInContent = x + scrollLeft
+
+        const time = xInContent / PIXELS_PER_SECOND
         const clampedTime = Math.max(0, Math.min(duration, time))
 
         dispatch({
@@ -171,8 +196,10 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
 
       const touch = e.touches[0]
       const x = touch.clientX - rect.left
-      const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
-      const time = (percentage / 100) * duration
+      const scrollLeft = timelineRef.current?.scrollLeft || 0
+      const xInContent = x + scrollLeft
+
+      const time = xInContent / PIXELS_PER_SECOND
       const clampedTime = Math.max(0, Math.min(duration, time))
 
       dispatch({
@@ -206,70 +233,77 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
       <div className="relative">
         <div
           ref={timelineRef}
-          className="relative h-[60px] rounded-lg lg:rounded-t-none overflow-hidden bg-gradient-to-r from-neutral-700 via-neutral-600 to-neutral-700 cursor-pointer select-none"
+          className="relative h-[60px] rounded-lg lg:rounded-t-none overflow-x-auto bg-gradient-to-r from-neutral-700 via-neutral-600 to-neutral-700 cursor-pointer select-none"
           onClick={handleTimelineClick}
           onMouseDown={handleTimelineDrag}
           onTouchStart={handleTouchStart}
           data-testid="timeline-container"
         >
-          {/* 所有片段 - 選中和未選中都顯示 */}
-          {displaySegments.map((segment, index) => (
-            <div
-              key={segment.id}
-              className={clsx(
-                'absolute top-[3px] md:top-[5px] h-[34px] md:h-[50px] rounded cursor-pointer flex items-center justify-center transition-all border-2 border-transparent hover:-translate-y-0.5 hover:border-white shadow hover:shadow-md text-white text-xs',
-                {
-                  'bg-green-600/70': segment.isSelected,
-                  'bg-neutral-600/50 border-neutral-500': !segment.isSelected,
-                },
-              )}
-              style={getSegmentStyle(segment)}
-              data-testid={`segment-${index}`}
-              onClick={() => {
-                dispatch({ type: 'SEEK', payload: segment.start })
-              }}
-              title={
-                segment.isSelected
-                  ? `已選中 - ${formatTime(segment.start)} - ${formatTime(segment.end)}`
-                  : `未選中 - ${formatTime(segment.start)} - ${formatTime(segment.end)}`
-              }
-            >
-              <div className="flex items-center justify-center w-full h-full">
-                <span
-                  className={clsx('font-bold text-xs md:text-sm', {
-                    'text-white': segment.isSelected,
-                    'text-neutral-300': !segment.isSelected,
-                  })}
-                >
-                  {index + 1}
-                </span>
-              </div>
-            </div>
-          ))}
-
-          {/* 目前播放位置指示器 */}
           <div
-            className="absolute top-0 w-0.5 h-[40px] md:h-[60px] bg-red-500 pointer-events-none z-10"
-            style={{ left: `${getCurrentTimePosition()}%` }}
+            className="relative h-full"
+            style={{ width: `${duration * PIXELS_PER_SECOND}px` }}
           >
-            <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 md:w-2.5 h-2 md:h-2.5 bg-red-500 rounded-full" />
-          </div>
-        </div>
-
-        {/* 時間刻度 */}
-        <div className="flex relative h-4 md:h-5 text-neutral-400 text-xs">
-          {Array.from({ length: 6 }, (_, i) => {
-            const time = (duration / 5) * i
-            return (
+            {/* 所有片段 - 選中和未選中都顯示 */}
+            {displaySegments.map((segment, index) => (
               <div
-                key={i}
-                className="absolute -translate-x-1/2 whitespace-nowrap"
-                style={{ left: `${(i / 5) * 100}%` }}
+                key={segment.id}
+                className={clsx(
+                  'absolute top-[3px] md:top-[5px] h-[34px] md:h-[50px] rounded cursor-pointer flex items-center justify-center transition-all border-2 border-transparent hover:-translate-y-0.5 hover:border-white shadow hover:shadow-md text-white text-xs',
+                  {
+                    'bg-green-600/70': segment.isSelected,
+                    'bg-neutral-600/50 border-neutral-500': !segment.isSelected,
+                  },
+                )}
+                style={getSegmentStyle(segment)}
+                data-testid={`segment-${index}`}
+                onClick={() => {
+                  dispatch({ type: 'SEEK', payload: segment.start })
+                }}
+                title={
+                  segment.isSelected
+                    ? `已選中 - ${formatTime(segment.start)} - ${formatTime(segment.end)}`
+                    : `未選中 - ${formatTime(segment.start)} - ${formatTime(segment.end)}`
+                }
               >
-                {formatTime(time)}
+                <div className="flex items-center justify-center w-full h-full">
+                  <span
+                    className={clsx('font-bold text-xs md:text-sm', {
+                      'text-white': segment.isSelected,
+                      'text-neutral-300': !segment.isSelected,
+                    })}
+                  >
+                    {index + 1}
+                  </span>
+                </div>
               </div>
-            )
-          })}
+            ))}
+
+            {/* 目前播放位置指示器 */}
+            <div
+              className="absolute top-0 w-0.5 h-[40px] md:h-[60px] bg-red-500 pointer-events-none z-10"
+              style={{ left: `${currentTime * PIXELS_PER_SECOND}px` }}
+            >
+              <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 md:w-2.5 h-2 md:h-2.5 bg-red-500 rounded-full" />
+            </div>
+
+            {/* 時間刻度 */}
+            {Array.from({ length: Math.ceil(duration / 5) + 1 }, (_, i) => {
+              const time = i * 5
+              if (time > duration + 5) return null
+              return (
+                <div
+                  key={i}
+                  className="absolute -translate-x-1/2 whitespace-nowrap text-neutral-400 text-xs"
+                  style={{
+                    left: `${time * PIXELS_PER_SECOND}px`,
+                    top: '40px',
+                  }}
+                >
+                  {formatTime(time)}
+                </div>
+              )
+            })}
+          </div>
         </div>
       </div>
     </div>
