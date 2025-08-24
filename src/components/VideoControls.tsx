@@ -8,6 +8,13 @@ import {
   defaultTransitionConfig,
 } from '../config/transitionConfig'
 import performanceMonitor from '../utils/performanceMonitor'
+import {
+  BackwardIcon,
+  ForwardIcon,
+  PauseIcon,
+  PlayIcon,
+  CogIcon,
+} from '@heroicons/react/24/outline'
 
 /**
  * Props for the VideoControls component
@@ -85,43 +92,47 @@ export const VideoControls: React.FC<VideoControlsProps> = ({
       <div className="flex gap-1 md:gap-2 w-full md:w-auto justify-center">
         <button
           type="button"
-          className="bg-gray-600 text-white px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm transition-colors hover:bg-gray-700 disabled:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer flex-1 md:flex-none"
+          className="bg-gray-600 text-white px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm transition-colors hover:bg-gray-700 disabled:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer flex-1 md:flex-none flex items-center justify-center"
           onClick={handlePreviousSegment}
           disabled={selectedCount === 0 || !navigationState.canNavigatePrevious}
           data-testid="previous-segment-button"
           title="上一個片段"
         >
-          ⏮
+          <BackwardIcon className="w-4 h-4" />
         </button>
 
         <button
           type="button"
-          className="bg-indigo-500 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-md text-lg md:text-xl transition-colors hover:bg-indigo-600 cursor-pointer flex-1 md:flex-none"
+          className="bg-indigo-500 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-md text-lg md:text-xl transition-colors hover:bg-indigo-600 cursor-pointer flex-1 md:flex-none flex items-center justify-center"
           onClick={handlePlayPauseClick}
           data-testid="play-pause-button"
           title={selectedCount > 0 ? '播放選中的高亮片段' : '播放影片'}
         >
-          {isPlaying ? '⏸' : '▶'}
+          {isPlaying ? (
+            <PauseIcon className="w-4 h-4" />
+          ) : (
+            <PlayIcon className="w-4 h-4" />
+          )}
         </button>
 
         <button
           type="button"
-          className="bg-gray-600 text-white px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm transition-colors hover:bg-gray-700 cursor-pointer flex-1 md:flex-none"
+          className="bg-gray-600 text-white px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm transition-colors hover:bg-gray-700 cursor-pointer flex-1 md:flex-none flex items-center justify-center"
           onClick={() => setShowSettings(true)}
           title="轉換設置"
         >
-          ⚙
+          <CogIcon className="w-4 h-4" />
         </button>
 
         <button
           type="button"
-          className="bg-gray-600 text-white px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm transition-colors hover:bg-gray-700 disabled:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer flex-1 md:flex-none"
+          className="bg-gray-600 text-white px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm transition-colors hover:bg-gray-700 disabled:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer flex-1 md:flex-none flex items-center justify-center"
           onClick={handleNextSegment}
           disabled={selectedCount === 0 || !navigationState.canNavigateNext}
           data-testid="next-segment-button"
           title="下一個片段"
         >
-          ⏭
+          <ForwardIcon className="w-4 h-4" />
         </button>
       </div>
 
