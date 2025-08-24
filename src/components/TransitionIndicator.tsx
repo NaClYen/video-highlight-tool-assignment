@@ -1,4 +1,5 @@
 import React from 'react'
+import clsx from 'clsx'
 import { type TransitionState } from '../hooks/useSmoothTransition'
 
 /**
@@ -69,7 +70,11 @@ export const TransitionIndicator: React.FC<TransitionIndicatorProps> = ({
       {/* 狀態指示器 */}
       <div className="flex items-center gap-2 mb-3">
         <div
-          className={`w-3 h-3 rounded-full ${getProgressColor()} animate-pulse`}
+          className={clsx(
+            'w-3 h-3 rounded-full',
+            getProgressColor(),
+            'animate-pulse',
+          )}
         />
         <span className="text-sm font-medium">{getTransitionText()}</span>
       </div>
@@ -77,7 +82,10 @@ export const TransitionIndicator: React.FC<TransitionIndicatorProps> = ({
       {/* 進度條 */}
       <div className="w-full bg-gray-700 rounded-full h-2 mb-3">
         <div
-          className={`h-2 rounded-full transition-all duration-200 ${getProgressColor()}`}
+          className={clsx(
+            'h-2 rounded-full transition-all duration-200',
+            getProgressColor(),
+          )}
           style={{ width: `${progress * 100}%` }}
         />
       </div>

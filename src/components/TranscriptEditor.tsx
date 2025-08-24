@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import type { TranscriptSection, TranscriptSentence } from '../types'
+import clsx from 'clsx'
 
 interface TranscriptEditorProps {
   sections: TranscriptSection[]
@@ -70,13 +71,16 @@ export const TranscriptEditor: React.FC<TranscriptEditorProps> = ({
                 ref={(el) => {
                   rowRefs.current[sentence.id] = el
                 }}
-                className={
-                  `flex items-start gap-2 p-2 mb-1 md:mb-2 rounded transition-all duration-200 cursor-pointer ` +
-                  `hover:bg-neutral-600 hover:shadow-md ` +
-                  `${sentence.isSelected ? 'bg-green-600/30 ' : ''}` +
-                  `${isCurrentSentence(sentence) ? 'bg-blue-900/40 border-l-4 border-l-blue-500 ' : ''}` +
-                  `${sentence.isHighlighted ? 'border-r-4 border-r-amber-500 ' : ''}`
-                }
+                className={clsx(
+                  'flex items-baseline gap-2 p-2 mb-1 md:mb-2 rounded transition-all duration-200 cursor-pointer',
+                  'hover:bg-neutral-600 hover:shadow-md',
+                  {
+                    'bg-green-600/30': sentence.isSelected,
+                    'bg-blue-900/40 border-l-4 border-l-blue-500':
+                      isCurrentSentence(sentence),
+                    'border-r-4 border-r-amber-500': sentence.isHighlighted,
+                  },
+                )}
                 data-selected={sentence.isSelected ? 'true' : 'false'}
                 data-testid={`transcript-row-${sentence.id}${isCurrentSentence(sentence) ? '-current' : ''}`}
                 onClick={(e) => {
@@ -97,7 +101,7 @@ export const TranscriptEditor: React.FC<TranscriptEditorProps> = ({
                   checked={sentence.isSelected}
                   onChange={() => onSentenceToggle(sentence.id)}
                   onClick={(e) => e.stopPropagation()} // Prevent double toggle
-                  className="pointer-events-none mt-1 md:mt-0 w-4 h-4 md:w-3 md:h-3" // Make checkbox non-interactive since row handles it
+                  className="pointer-events-none w-4 h-4 md:w-3 md:h-3" // Make checkbox non-interactive since row handles it
                   aria-label={`選擇句子: ${sentence.text.substring(0, 50)}...`}
                 />
                 <button

@@ -1,4 +1,5 @@
 import React, { useMemo, useCallback, useRef, useState, useEffect } from 'react'
+import clsx from 'clsx'
 import { useVideoPlayerContext } from '../contexts/useVideoPlayerContext'
 
 import type { TranscriptSentence } from '../types'
@@ -215,11 +216,13 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
           {displaySegments.map((segment, index) => (
             <div
               key={segment.id}
-              className={`absolute top-[3px] md:top-[5px] h-[34px] md:h-[50px] rounded cursor-pointer flex items-center justify-center transition-all border-2 border-transparent hover:-translate-y-0.5 hover:border-white shadow hover:shadow-md text-white text-xs ${
-                segment.isSelected
-                  ? 'bg-green-600/70'
-                  : 'bg-neutral-600/50 border-neutral-500'
-              }`}
+              className={clsx(
+                'absolute top-[3px] md:top-[5px] h-[34px] md:h-[50px] rounded cursor-pointer flex items-center justify-center transition-all border-2 border-transparent hover:-translate-y-0.5 hover:border-white shadow hover:shadow-md text-white text-xs',
+                {
+                  'bg-green-600/70': segment.isSelected,
+                  'bg-neutral-600/50 border-neutral-500': !segment.isSelected,
+                },
+              )}
               style={getSegmentStyle(segment)}
               data-testid={`segment-${index}`}
               onClick={() => {
@@ -233,7 +236,10 @@ export const HighlightTimeline: React.FC<HighlightTimelineProps> = ({
             >
               <div className="flex items-center justify-center w-full h-full">
                 <span
-                  className={`font-bold text-xs md:text-sm ${segment.isSelected ? 'text-white' : 'text-neutral-300'}`}
+                  className={clsx('font-bold text-xs md:text-sm', {
+                    'text-white': segment.isSelected,
+                    'text-neutral-300': !segment.isSelected,
+                  })}
                 >
                   {index + 1}
                 </span>

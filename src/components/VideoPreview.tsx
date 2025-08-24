@@ -93,7 +93,7 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
       data-testid="video-preview"
       className="lg:h-full flex flex-col min-h-0"
     >
-      <h3 className="mt-0 text-white border-b border-neutral-700 pb-2 text-sm md:text-base font-medium flex-shrink-0">
+      <h3 className="text-white border-b border-neutral-700 pb-2 text-sm md:text-base font-medium flex-shrink-0">
         預覽區域
       </h3>
 
@@ -121,7 +121,10 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
         </div>
       )}
 
-      <div className="relative mb-2 md:mb-4" data-testid="video-container">
+      <div
+        className="relative mb-2 md:mb-4 shrink-0"
+        data-testid="video-container"
+      >
         <video
           ref={videoRef}
           src={videoUrl}

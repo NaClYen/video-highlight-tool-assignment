@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import clsx from 'clsx'
 import {
   type TransitionConfig,
   getTransitionConfig,
@@ -66,31 +67,34 @@ export const TransitionSettings: React.FC<TransitionSettingsProps> = ({
           <div className="grid grid-cols-3 gap-2">
             <button
               onClick={() => handlePresetChange('default')}
-              className={`px-3 py-2 rounded text-sm ${
-                localConfig === getTransitionConfig('default')
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-neutral-700 hover:bg-neutral-600'
-              }`}
+              className={clsx('px-3 py-2 rounded text-sm', {
+                'bg-indigo-600 text-white':
+                  localConfig === getTransitionConfig('default'),
+                'bg-neutral-700 hover:bg-neutral-600':
+                  localConfig !== getTransitionConfig('default'),
+              })}
             >
               默認
             </button>
             <button
               onClick={() => handlePresetChange('performance')}
-              className={`px-3 py-2 rounded text-sm ${
-                localConfig === getTransitionConfig('performance')
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-neutral-700 hover:bg-neutral-600'
-              }`}
+              className={clsx('px-3 py-2 rounded text-sm', {
+                'bg-indigo-600 text-white':
+                  localConfig === getTransitionConfig('performance'),
+                'bg-neutral-700 hover:bg-neutral-600':
+                  localConfig !== getTransitionConfig('performance'),
+              })}
             >
               高性能
             </button>
             <button
               onClick={() => handlePresetChange('accessibility')}
-              className={`px-3 py-2 rounded text-sm ${
-                localConfig === getTransitionConfig('accessibility')
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-neutral-700 hover:bg-neutral-600'
-              }`}
+              className={clsx('px-3 py-2 rounded text-sm', {
+                'bg-indigo-600 text-white':
+                  localConfig === getTransitionConfig('accessibility'),
+                'bg-neutral-700 hover:bg-neutral-600':
+                  localConfig !== getTransitionConfig('accessibility'),
+              })}
             >
               無障礙
             </button>

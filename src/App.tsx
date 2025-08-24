@@ -23,34 +23,9 @@ function App() {
   )
   const [isProcessing, setIsProcessing] = useState(false)
 
-  // Remove the context usage from here
-  // const { state } = useVideoPlayerContext()
-
   const handleVideoUpload = useCallback(async (file: File) => {
     setIsProcessing(true)
 
-    // E2E Test Bypass: The onloadedmetadata event for dynamically created video
-    // elements does not reliably fire in the Playwright test environment. This
-    // bypasses that event for the specific test file to make the flow testable.
-    if (file.name === 'test-video.mp4') {
-      const videoData: VideoData = {
-        file,
-        url: URL.createObjectURL(file),
-        duration: 120, // Mock duration, as we can't get it from the metadata event
-      }
-      setVideoData(videoData)
-      try {
-        const result = await mockProcessVideo(file)
-        setTranscriptData(result)
-      } catch (error) {
-        // Error handling removed
-      } finally {
-        setIsProcessing(false)
-      }
-      return
-    }
-
-    // --- Original logic for real user uploads ---
     const videoUrl = URL.createObjectURL(file)
     const video = document.createElement('video')
     video.src = videoUrl
@@ -68,7 +43,7 @@ function App() {
         const result = await mockProcessVideo(file)
         setTranscriptData(result)
       } catch (error) {
-        // Error handling removed
+        console.error('處理影片失敗:', error)
       } finally {
         setIsProcessing(false)
       }
@@ -217,7 +192,7 @@ function AppContent({
 
       <div className="flex flex-1 min-h-0 flex-col lg:flex-row h-[calc(100vh-80px)] md:h-[calc(100vh-80px)]">
         {/* 預覽區 - 手機版固定在頂部，桌面版在右側 */}
-        <div className="lg:flex-1 p-2 md:p-4 bg-neutral-700 lg:h-auto order-1 lg:order-2 min-h-0 lg:relative flex-shrink-0 sticky top-0 left-0 right-0 md:relative">
+        <div className="lg:flex-1 p-2 md:p-4 bg-neutral-700 lg:h-auto order-1 lg:order-2 min-h-0 flex-shrink-0 sticky top-0 left-0 right-0 md:relative">
           <VideoPreview
             videoUrl={videoData.url}
             selectedSentences={orderedSelected}
