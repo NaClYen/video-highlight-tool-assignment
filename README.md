@@ -11,6 +11,7 @@ A React-based video editing tool that uses AI to help users create highlight cli
 - **Real-time Sync**: Bidirectional synchronization between transcript editor and video player
 - **Virtual Timeline**: Seamless playback of non-contiguous highlight segments
 - **Transcript Overlay**: Selected text appears as overlay on video during playback
+- **Responsive Design**: Mobile-first design with adaptive layout for different screen sizes
 
 ## 🏗️ Architecture
 
@@ -22,6 +23,7 @@ A React-based video editing tool that uses AI to help users create highlight cli
 - **Tailwind CSS 4.1.12**: Utility-first CSS framework with native Vite integration
 - **Vitest**: Unit and integration testing
 - **Playwright**: End-to-end testing across browsers
+- **Heroicons**: Icon library for UI elements
 
 ### State Management
 
@@ -50,15 +52,14 @@ src/
 ├── reducers/            # State management
 │   └── videoPlayerReducer.ts
 ├── utils/               # Utility functions
-│   ├── mockApi.ts         # Mock API for development
-│   └── virtualTimeline.ts # Virtual timeline logic
+│   └── mockApi.ts         # Mock API for development
 ├── types/               # TypeScript definitions
 └── __tests__/           # Test files (co-located)
 ```
 
 ## 🚀 Quick Start
 
-## Project Setup
+### Project Setup
 
 ```sh
 pnpm install
@@ -146,6 +147,15 @@ pnpm e2e:report
 - **Real-time Sync**: The transcript automatically scrolls during playback
 - **Virtual Timeline**: Selected segments play seamlessly as one continuous video
 - **Subtitle Overlay**: Selected text appears on the video during playback
+- **Responsive Layout**: Interface adapts to mobile and desktop screens
+
+### UI Components
+
+- **VideoUpload**: Drag-and-drop file upload with processing indicator
+- **TranscriptEditor**: Interactive transcript with sentence selection and timestamp navigation
+- **VideoPreview**: Video player with subtitle overlay and highlight timeline
+- **VideoControls**: Playback controls with highlight mode toggle
+- **HighlightTimeline**: Visual representation of selected segments
 
 ## 🎥 Demo Video
 
@@ -155,29 +165,39 @@ A demo video is included in the `public/` folder for testing purposes.
 
 ## 🔧 Technical Decisions
 
-### Why Context API + Reducer?
+For a comprehensive overview of all technical decisions and their rationale, see **[Technical Choices Documentation](docs/technical-choices.md)**.
+
+### Key Technical Decisions
+
+#### Why Context API + Reducer?
 
 - **Predictable State**: Pure reducer functions make state changes predictable and testable
 - **Performance**: Context prevents prop drilling while maintaining component isolation
 - **Debugging**: Centralized state makes debugging easier with clear action flows
 
-### Why Virtual Timeline?
+#### Why Virtual Timeline?
 
 - **User Experience**: Allows seamless playback of non-contiguous video segments
 - **Flexibility**: Users can select any combination of sentences without jarring jumps
 - **Performance**: Efficient time calculations for complex highlight sequences
 
-### Why Separate Effects Hook?
+#### Why Separate Effects Hook?
 
 - **Single Responsibility**: `useVideoEffects` handles all DOM synchronization
 - **No Duplicates**: Prevents multiple event listeners on the same video element
 - **Testability**: Pure reducer + isolated effects = easier testing
 
-### Why Tailwind CSS 4?
+#### Why Tailwind CSS 4?
 
 - **Native Vite Integration**: No config file needed, works out of the box
 - **Performance**: Only includes used utilities in production
 - **Developer Experience**: Utility-first approach speeds up development
+
+#### Mock API Design
+
+- **Development Friendly**: Simulates real API behavior without external dependencies
+- **Configurable Timing**: Adjustable processing delays for realistic UX
+- **Structured Data**: Returns well-organized transcript sections with timing information
 
 ## 🚀 Deployment
 
@@ -200,7 +220,7 @@ Before deployment, ensure all quality checks pass:
 ```sh
 pnpm tsc      # TypeScript compilation
 pnpm lint     # ESLint checks
-pnpm test     # Unit tests
+pnpm test     # Unit tests (note: some tests may fail due to UI changes)
 pnpm e2e:ai   # E2E tests
 pnpm build    # Production build
 ```
